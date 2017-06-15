@@ -7,6 +7,8 @@ Autolab3::Application.routes.draw do
 
   get "contact", to: "home#contact"
 
+  get "course_user_data/newStudent", to: "course_user_data#new"
+
   namespace :home do
     if Rails.env == "development"
       match "developer_login", via: [:get, :post]

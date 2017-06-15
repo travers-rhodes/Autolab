@@ -18,10 +18,6 @@ class CourseUserDataController < ApplicationController
     @newCUD.tweak = Tweak.new
   end
 
-  def newCUD_PublicCourse
-
-  end
-
   action_auth_level :create, :instructor
   def create
     cud_parameters = cud_params
@@ -74,7 +70,6 @@ class CourseUserDataController < ApplicationController
 
   action_auth_level :show, :student
   def show
-    @requestedUser = @cud.course.course_user_data.find(params[:id])
     respond_to do |format|
       if @requestedUser
         format.html
@@ -118,7 +113,7 @@ class CourseUserDataController < ApplicationController
         if @editCUD.save
           redirect_to(action: :show) && return
         else
-          flash[:error] = "Please complete all of your account informatggggggggggion before continuing:"
+          flash[:error] = "Please complete all of your account information before continuing"
           @editCUD.errors.full_messages.each do |msg|
             flash[:error] += "<br>#{msg}"
           end

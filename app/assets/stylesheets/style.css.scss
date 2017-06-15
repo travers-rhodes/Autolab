@@ -34,9 +34,19 @@ html, body {
 
 /* Button Styles */
 
-.autolab .btn { 
+.autolab .btn {
   font-weight: normal;
   background-color: $autolab-red;
+}
+
+.autolab .copyToClipboardbtn {
+  color: white;
+  font-weight: normal;
+  background-color: $autolab-red;
+  padding:5px;
+  cursor: pointer;
+  border-top-right-radius:5px;
+  border-bottom-right-radius:5px;
 }
 
 /* Helper Styles */
@@ -955,8 +965,8 @@ display: block;
 }
 
 .options .danger-side {
-  border-left: 6px solid #e53935; 
-  border-right: 1px solid #e53935; 
+  border-left: 6px solid #e53935;
+  border-right: 1px solid #e53935;
 }
 
 

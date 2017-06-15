@@ -53,9 +53,9 @@ function copyToClipboard(element) {
 
 <b>ShareLink:</b>
 <!--Target-->
-<b id="copylink" style="background-color:lightgrey; padding:5px;"> <%= request.url.sub!("users", "") + url_for("course_user_data/new")%></b><!--
---><span onclick="copyToClipboard('#copylink')" style="background-color:grey; padding:5px; cursor:pointer; font-color:black">
-    Copy to Clipboard
+<b id="copylink" style="background-color:lightgrey; padding:5px; border-top-left-radius:5px; border-bottom-left-radius:5px;"> <%= request.url.sub!("users", "") + url_for("course_user_data/newCUD_PublicCourse")%></b><!--
+--><span onclick="copyToClipboard('#copylink')" class="copyToClipboardbtn">
+    <b>Copy to Clipboard</b>
 </span>
 
 <br>
