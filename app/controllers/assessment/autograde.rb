@@ -365,6 +365,7 @@ module AssessmentAutograde
     begin
       existing_files = TangoClient.open("#{course.name}-#{assessment.name}")
       print "\n\n\n"
+      print "Existing Files:"
       print existing_files
       print "\n\n\n"
     rescue TangoClient::TangoException => e
