@@ -328,18 +328,10 @@ class SubmissionsController < ApplicationController
         if out || (@cud.instructor || @cud.course_assistant) then
           false
         else
-          if(@assessment.grading_deadline.past?) then 
-            false
-          else
-            true
-          end
+          !(@assessment.grading_deadline.past?)
         end
       else
-        if(@assessment.grading_deadline.past? || (@cud.instructor || @cud.course_assistant)) then 
-          false
-        else
-          true
-        end
+          !(@assessment.grading_deadline.past? || (@cud.instructor || @cud.course_assistant))
       end 
     end
     # extract information from annotations
