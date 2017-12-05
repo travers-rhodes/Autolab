@@ -44,7 +44,7 @@ var initializeAnnotationsForCode = function() {
 
   _.each(annotationsByLine, function(arr_annotations, lineInd) {
     _.each(arr_annotations, function(annotationObj, ind) {
-      $(lines[lineInd - 1]).find(".annotations-container").append(newAnnotationBox(annotationObj));
+      $(lines[lineInd - 1]).find(".annotations-container").append(newAnnotationBox(annotationObj, true));
     });
   });
 
@@ -105,7 +105,7 @@ var initializeAnnotationsForCode = function() {
   }
 
   // this creates the HTML to display an annotation.
-  function newAnnotationBox(annObj) {
+  function newAnnotationBox(annObj, isMinimized) {
 
     var problemStr = annObj.problem_id? getProblemNameWithId(annObj.problem_id) : "General";
     var valueStr = annObj.value? annObj.value.toString() : "None";
@@ -174,10 +174,14 @@ var initializeAnnotationsForCode = function() {
       return false;
     });
 
-    $(body).hide();
-    $(min).hide();
-    $(score).hide();
-    $(header).hide();
+    // This is the code that auto-minimizes the current annotation when it is
+    // created (either on page load or when the annotation is created)
+    if(isMinimized == true) {
+      $(body).hide();
+      $(min).hide();
+      $(score).hide();
+      $(header).hide();
+    }
 
     $(min).on("click", function(e) {
       $(body).hide();
@@ -667,7 +671,7 @@ var submitNewAnnotation = function(comment, value, problem_id, lineInd, formEl) 
     },
     type: "POST",
     success: function(data, type) {
-      $line.find('.annotations-container').append(newAnnotationBox(data));
+      $line.find('.annotations-container').append(newAnnotationBox(data, false));
       if (!annotationsByLine[lineInd]) {
         annotationsByLine[lineInd] = [];
       }
