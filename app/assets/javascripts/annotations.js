@@ -64,6 +64,48 @@ var initializeAnnotationsForCode = function() {
 
 }
 
+var minimizeAllAnnotations = function() {
+  window.annotationMode = "Code";
+  //hljs.removeClass(".annotations-container");
+
+  var block = document.getElementById('code-block');
+  hljs.highlightBlock(block);
+
+  // annotationsByLine: { 'lineNumber': [annotations_array ]}
+  annotationsByLine = {};
+  _.each(annotations, function(annotationObj, ind) {
+    var lineInd = annotationObj.line
+    if (!annotationsByLine[lineInd]) {
+      annotationsByLine[lineInd] = [];
+    }
+    annotationsByLine[lineInd].push(annotationObj);
+  });
+
+  var lines = document.querySelector("#code-list").children,
+    ann;
+
+  _.each(annotationsByLine, function(arr_annotations, lineInd) {
+    _.each(arr_annotations, function(annotationObj, ind) {
+      $(lines[lineInd - 1]).find(".annotations-container").append(newAnnotationBox(annotationObj, true));
+    });
+  });
+
+  /* if you click a line, clean up any '.annotating's and
+   * call annotate to set up the annotation.
+   */
+  $(".add-annotation-btn").on("click", function(e) {
+    var btn = e.currentTarget;
+    var lineInd = parseInt(btn.id.replace('add-btn-', ''), 10);
+    if ($('#annotation-form-' + lineInd).length) {
+      $('#annotation-form-' + lineInd).find('.comment').focus();
+    } else {
+      showAnnotationForm(lineInd);
+    }
+    e.stopPropagation();
+  });
+
+}
+
 
   function getProblemNameWithId(problem_id) {
     var problem_id = parseInt(problem_id, 10);
