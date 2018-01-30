@@ -208,7 +208,7 @@ module AssessmentAutograde
       e.backtrace.each { |line| COURSE_LOGGER.log(line) }
       return -3, nil
     end
-    
+
 		upload_file_list.each do |f|
 			if !Pathname.new(f["localFile"]).file?
         flash[:error] = "Error while uploading autograding files."
@@ -431,7 +431,7 @@ module AssessmentAutograde
     else
         [handin, makefile, autograde]
     end
-    
+
   end
 
   ##
@@ -490,6 +490,10 @@ module AssessmentAutograde
           score.feedback = lines.join
           score.released = @autograde_prop.release_score
           score.grader_id = 0
+          # We just give a dummy value to the annotation_id, since it'll never
+          # be used anyway
+          score.annotation_id = 0
+          score.autograded = true
           score.save!
         end
       end
