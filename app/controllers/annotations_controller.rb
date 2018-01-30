@@ -19,8 +19,32 @@ class AnnotationsController < ApplicationController
   def create
     annotation = @submission.annotations.new(annotation_params)
 
-    annotation.save
-    respond_with(@course, @assessment, @submission, annotation)
+    # If the annotation has a number in the score field
+    if !annotation_params[:problem_id].blank?
+      # Create a score object
+      score = Score.new
+      score.submission_id =  params[:submission_id]
+      score.score = annotation_params[:value]
+      score.problem_id = annotation_params[:problem_id]
+      score.released = 0
+      score.grader_id = @cud.id
+      score.annotation_id = annotation.object_id
+      score.autograded = false
+      score.save
+      annotation.save
+      respond_with(@course, @assessment, @submission, annotation)
+      return
+    # Else:
+    else
+      # Save the annotation, return
+      annotation.save
+      respond_with(@course, @assessment, @submission, annotation)
+      return
+    end
+
+
+    #annotation.save
+    #respond_with(@course, @assessment, @submission, annotation)
   end
 
   # PUT /:course/annotations/1.json
