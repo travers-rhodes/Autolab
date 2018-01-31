@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180128190513) do
+ActiveRecord::Schema.define(version: 20180131233314) do
 
   create_table "annotations", force: :cascade do |t|
     t.integer  "submission_id", limit: 4
@@ -228,7 +228,7 @@ ActiveRecord::Schema.define(version: 20180128190513) do
     t.boolean  "autograded",    limit: 1,        default: false
   end
 
-  add_index "scores", ["problem_id", "submission_id"], name: "problem_submission_unique", unique: true, using: :btree
+  add_index "scores", ["problem_id", "submission_id"], name: "problem_submission_unique", using: :btree
   add_index "scores", ["submission_id"], name: "index_scores_on_submission_id", using: :btree
 
   create_table "submissions", force: :cascade do |t|

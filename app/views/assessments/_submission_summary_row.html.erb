@@ -71,6 +71,10 @@
     <td class="prettyBorder">
       <% if @scores[submission.id] and @scores[submission.id][problem.id] and @scores[submission.id][problem.id][:released] == 1 then
         score = @scores[submission.id][problem.id]
+        print("\n\n\n")
+        print(Score.where('submission_id = ? AND problem_id = ?', submission.id , problem.id).many?)
+        print(score)
+        print("\n\n\n")
         if score[:feedback] then %>
 
           <%= link_to (score[:score].to_f.round(1).to_s), {action: :viewFeedback,
