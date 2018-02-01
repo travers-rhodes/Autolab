@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180131233314) do
+ActiveRecord::Schema.define(version: 20180201161011) do
 
   create_table "annotations", force: :cascade do |t|
     t.integer  "submission_id", limit: 4
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20180131233314) do
     t.float    "value",         limit: 24
     t.integer  "problem_id",    limit: 4
     t.string   "coordinate",    limit: 255
+    t.integer  "score_id",      limit: 4
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -224,7 +225,6 @@ ActiveRecord::Schema.define(version: 20180131233314) do
     t.datetime "updated_at"
     t.boolean  "released",      limit: 1,        default: false
     t.integer  "grader_id",     limit: 4
-    t.integer  "annotation_id", limit: 4
     t.boolean  "autograded",    limit: 1,        default: false
   end
 
