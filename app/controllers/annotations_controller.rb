@@ -23,11 +23,6 @@ class AnnotationsController < ApplicationController
     if !annotation_params[:problem_id].blank?
       # Create a score object
       score = Score.new
-      print("\n\n\nCreating annotation with submission_id: ")
-      print(params[:submission_id])
-      print("and problem_id: ")
-      print(annotation_params[:problem_id])
-      print("\n")
       score.submission_id =  params[:submission_id]
       score.score = annotation_params[:value]
       score.problem_id = annotation_params[:problem_id]
@@ -36,12 +31,6 @@ class AnnotationsController < ApplicationController
       score.annotation_id = annotation.object_id
       score.autograded = false
       score.save
-      print("tj Number of scores:")
-      print("tj", Score.where('submission_id = ? AND problem_id = ?', params[:submission_id], annotation_params[:problem_id]).first.score)
-      print("tj\n")
-      print("tj", Score.where('submission_id = ? AND problem_id = ?', params[:submission_id], annotation_params[:problem_id]).length)
-
-      print("\n\n\n")
       annotation.save
       respond_with(@course, @assessment, @submission, annotation)
       return
