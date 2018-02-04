@@ -62,6 +62,15 @@ var initializeAnnotationsForCode = function() {
     e.stopPropagation();
   });
 
+  $(".descript").on("click", function (e) {
+      var box = $("#ann-box-" + $(this).data("annotation"));
+      if (!$(box).data("minimized")) {
+          $(box).find(".minimize").trigger("click");
+      } else {
+          $(box).trigger("click");
+      }
+  })
+
 }
 
 
@@ -111,8 +120,6 @@ var initializeAnnotationsForCode = function() {
     var valueStr = annObj.value? annObj.value.toString() : "None";
     var commentStr = annObj.comment;
 
-    var minimized = true
-
     var grader = elt("span", {
       class: "grader"
     }, annObj.submitted_by + " says:");
@@ -146,12 +153,14 @@ var initializeAnnotationsForCode = function() {
 
     var body = elt("div", {
       class: "body"
-    }, score, commentStr);
+    }, score, elt("div", {class: "clear"}), elt("p", {}, commentStr));
 
     var box = elt("div", {
       class: "ann-box",
       id: "ann-box-" + annObj.id
     }, header, body)
+
+    $(box).data("minimized", true);
 
     $(del).on("click", function(e) {
       $.ajax({
@@ -170,7 +179,7 @@ var initializeAnnotationsForCode = function() {
       $(min).show();
       $(score).show();
       $(header).show();
-      minimized = false
+      $(box).data("minimized", false);
       return false;
     });
 
@@ -184,7 +193,7 @@ var initializeAnnotationsForCode = function() {
       $(min).hide();
       $(score).hide();
       $(header).hide();
-      minimized = true
+      $(box).data("minimized", true);
       return false;
     });
 
@@ -193,6 +202,7 @@ var initializeAnnotationsForCode = function() {
       $(edit).hide();
       var form = newEditAnnotationForm(annObj.line, annObj);
       $(box).append(form);
+      $(box).find("textarea").trigger('autoresize');
       //var updateAnnotation = function(annotationObj, lineInd, formEl) {
 
     });
@@ -272,7 +282,9 @@ var initializeAnnotationsForCode = function() {
       $(edit).hide();
       $(score).hide();
       var form = newEditAnnotationForm(annObj.line, annObj);
-      $(box).append(form);
+      $(box).append(form, function () {
+          $(box).find("textarea").trigger('autoresize');
+      });
       //var updateAnnotation = function(annotationObj, lineInd, formEl) {
 
     });
@@ -308,13 +320,13 @@ var initializeAnnotationsForCode = function() {
   var newAnnotationForm = function(lineInd) {
 
     // this section creates the new/edit annotation form that's used everywhere
-    var commentInput = elt("input", {
-      class: "col l6 comment",
+    var commentInput = elt("textarea", {
+      class: "col l11 comment materialize-textarea",
       type: "text",
       name: "comment",
-      placeholder: "Comments Here",
-      maxlength: "255"
+      placeholder: "Comments Here"
     });
+
     var valueInput = elt("input", {
       class: "col l3",
       type: "text",
@@ -481,24 +493,12 @@ var initializeAnnotationsForCode = function() {
     var commentStr = annObj.comment;
 
     // this section creates the new/edit annotation form that's used everywhere
-    var commentInput = elt("input", {
-      class: "col l6 comment",
-      type: "text",
-      name: "comment",
-      placeholder: "Comments FLOOP FLAGG BOOP BOOP",
-      maxlength: "255",
-      value: commentStr
-    });
-
-    if (annotationMode === "PDF") {
       var commentInput = elt("textarea", {
-        class: "col l12 comment",
+        class: "col l12 comment materialize-textarea",
         type: "text",
         name: "comment",
-        placeholder: "Comments Here",
-        maxlength: "255"
+        placeholder: "Comments Here"
       }, commentStr);
-    }
 
     var valueInput = elt("input", {
       class: "col l2",

@@ -138,6 +138,14 @@ pre code {
   padding: .5em;
 }
 
+.ann-box > .body > p {
+    word-break: break-all;
+}
+
+.ann-box > .body > .clear {
+    clear: both;
+}
+
 .annotation-form {
   width: 94%;
   border: 1px solid #ccc;
@@ -232,4 +240,8 @@ pre {
 
 .collapse_expand{
   margin-bottom:10px;
+}
+
+.descript {
+    word-break: break-all;
 }
