@@ -28,9 +28,9 @@ class AnnotationsController < ApplicationController
       score.problem_id = annotation_params[:problem_id]
       score.released = 0
       score.grader_id = @cud.id
-      score.annotation_id = annotation.object_id
       score.autograded = false
       score.save
+      annotation.score_id = score.object_id
       annotation.save
       respond_with(@course, @assessment, @submission, annotation)
       return

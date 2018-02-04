@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20180201161011) do
     t.float    "value",         limit: 24
     t.integer  "problem_id",    limit: 4
     t.string   "coordinate",    limit: 255
-    t.integer  "score_id",      limit: 4
+    t.integer  "score_id",      limit: 8
   end
 
   create_table "announcements", force: :cascade do |t|

@@ -69,6 +69,7 @@
 
   <% for problem in @problems do %>
     <td class="prettyBorder">
+
       <% if @scores[submission.id] and @scores[submission.id][problem.id] and @scores[submission.id][problem.id][:released] == 1 then
         score = @scores[submission.id][problem.id]
         if score[:feedback] then %>
