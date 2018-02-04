@@ -64,7 +64,7 @@
 
             <div id="problem-list-<%= problem %>">
             <% descriptTuples.each do |descript, value, line, user, id| %>
-              <p class="descript" id="li-annotation-<%= id %>">
+              <p class="descript" id="descript-annotation-<%= id %>" data-annotation="<%= id%>">
                   <%= (user ? "line: #{line}, #{descript} [#{plus_fix(value)}] (#{user})" : "line: #{line}, #{descript} [#{plus_fix(value)}]") %>
               </p>
             <% end %>
