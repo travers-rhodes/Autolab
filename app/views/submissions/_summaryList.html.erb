@@ -1,0 +1,20 @@
+<div id="summaryList">
+  <% if (@cud.instructor? or @cud.course_assistant?) then %>
+    <b><div class="problemListItem">Note: Point tweaks here don't affect the gradebook.</div></b>
+  <% end %>
+  <% @problemSummaries.each do |problem, descriptTuples| %>
+    <hr>
+    <div class="problemListItem">
+
+      <p><%= "Problem: #{problem} [#{plus_fix(@problemGrades[problem])}]" %></p>
+
+      <div id="problem-list-<%= problem %>">
+      <% descriptTuples.each do |descript, value, line, user, id| %>
+        <p class="descript" id="descript-annotation-<%= id %>" data-annotation="<%= id%>">
+            <%= (user ? "line: #{line}, #{descript} [#{plus_fix(value)}] (#{user})" : "line: #{line}, #{descript} [#{plus_fix(value)}]") %>
+        </p>
+      <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

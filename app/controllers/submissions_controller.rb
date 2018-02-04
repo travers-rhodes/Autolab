@@ -5,7 +5,7 @@ require "prawn"
 class SubmissionsController < ApplicationController
   # inherited from ApplicationController
   before_action :set_assessment
-  before_action :set_submission, only: [:destroy, :destroyConfirm, :download, :edit, :listArchive, :update, :view]
+  before_action :set_submission, only: [:destroy, :destroyConfirm, :download, :edit, :listArchive, :update, :view, :summaryList]
   before_action :get_submission_file, only: [:download, :listArchive, :view]
   rescue_from ActionView::MissingTemplate do |exception|
       redirect_to("/home/error_404")
@@ -251,6 +251,71 @@ class SubmissionsController < ApplicationController
                 disposition: "inline"
       #  :type => mime
     end
+  end
+
+  action_auth_level :summaryList, :student
+  def summaryList
+      if params[:header_position]
+        file, pathname = Archive.get_nth_file(@submission.handin_file_path, params[:header_position].to_i)
+        unless file && pathname
+          return false
+        end
+
+      else
+        # redirect on archives
+        return if Archive.archive?(@submission.handin_file_path)
+
+        file = @submission.handin_file.read
+
+        @displayFilename = @submission.filename
+      end
+      return unless file
+
+      filename = @submission.handin_file_path
+
+
+      if !PDF.pdf?(file)
+        # fix for tar files
+        if params[:header_position]
+          @annotations = @submission.annotations.where(position: params[:header_position]).to_a
+        else
+          @annotations = @submission.annotations.to_a
+        end
+
+        @annotations.sort! { |a, b| a.line <=> b.line }
+      else
+        # fix for tar files
+        if params[:header_position]
+          @annotations = @submission.annotations.where(position: params[:header_position]).to_a
+        else
+          @annotations = @submission.annotations.to_a
+        end
+      end
+
+      @problemSummaries = {}
+      @problemGrades = {}
+
+
+      # extract information from annotations
+      @annotations.each do |annotation|
+        description = annotation.comment
+        value = annotation.value || 0
+        line = annotation.line
+        problem = annotation.problem ? annotation.problem.name : "General"
+
+
+        @problemSummaries[problem] ||= []
+        @problemSummaries[problem] << [description, value, line, annotation.submitted_by, annotation.id]
+
+        @problemGrades[problem] ||= 0
+        @problemGrades[problem] += value
+      end
+
+
+      @problems = @assessment.problems.to_a
+      @problems.sort! { |a, b| a.id <=> b.id }
+
+      render :partial => "summaryList", layout: false
   end
 
   # Action to be taken when the user wants to view a particular file.

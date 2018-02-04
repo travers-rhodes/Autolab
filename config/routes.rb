@@ -64,6 +64,7 @@ Autolab3::Application.routes.draw do
           get "download"
           get "listArchive", as: :list_archive
           get "view"
+          get "summaryList"
         end
 
         collection do

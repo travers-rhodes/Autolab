@@ -16,7 +16,7 @@ var highlightLines = function(highlight) {
 };
 
 var reloadSummary = function() {
-  window.location.reload()
+  $( ".summaries" ).load( "summaryList" );
 };
 
 $("#highlightLongLines").click(function() {
@@ -168,6 +168,7 @@ var initializeAnnotationsForCode = function() {
         type: 'DELETE',
         complete: function() {
           $(box).remove();
+          reloadSummary();
         }
       });
       return false;
@@ -673,6 +674,7 @@ var submitNewAnnotation = function(comment, value, problem_id, lineInd, formEl) 
       }
       annotationsByLine[lineInd].push(data);
       $(formEl).remove();
+      reloadSummary();
     },
     error: function(result, type) {
       $(formEl).append(elt("div", null, "Failed to Save Annotation!!!"));
@@ -695,6 +697,7 @@ var submitNewAnnotation = function(comment, value, problem_id, lineInd, formEl) 
       success: function(data, type) {
         updateAnnotationBox(annotationObj);
         $(formEl).remove();
+        reloadSummary();
       },
       error: function(result, type) {
         $(formEl).append(elt("div", null, "Failed to Save Annotation!!!"));
