@@ -308,6 +308,7 @@ var initializeAnnotationsForCode = function() {
     }
     $('#ann-box-' + annObj.id).find('.edit').show();
     $('#ann-box-' + annObj.id).find('.body').show();
+    $('#ann-box-' + annObj.id).find('.body').find("p").text(commentStr);
     $('#ann-box-' + annObj.id).find('.score-box').show();
 
   }
