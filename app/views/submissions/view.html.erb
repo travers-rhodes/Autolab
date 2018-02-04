@@ -58,12 +58,17 @@
         <% end %>
         <% @problemSummaries.each do |problem, descriptTuples| %>
           <hr>
-          <div class="problemListItem"> <%= "Problem: #{problem} [#{plus_fix(@problemGrades[problem])}]" %>
-            <ul id="problem-list-<%= problem %>">
+          <div class="problemListItem">
+
+            <p><%= "Problem: #{problem} [#{plus_fix(@problemGrades[problem])}]" %></p>
+
+            <div id="problem-list-<%= problem %>">
             <% descriptTuples.each do |descript, value, line, user, id| %>
-              <li class="descript" id="li-annotation-<%= id %>"><%= (user ? "line: #{line}, #{descript} [#{plus_fix(value)}] (#{user})" : "line: #{line}, #{descript} [#{plus_fix(value)}]") %></li>
+              <p class="descript" id="li-annotation-<%= id %>">
+                  <%= (user ? "line: #{line}, #{descript} [#{plus_fix(value)}] (#{user})" : "line: #{line}, #{descript} [#{plus_fix(value)}]") %>
+              </p>
             <% end %>
-            </ul>
+            </div>
           </div>
         <% end %>
       </div>

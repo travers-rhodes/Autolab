@@ -146,7 +146,7 @@ var initializeAnnotationsForCode = function() {
 
     var body = elt("div", {
       class: "body"
-    }, score, commentStr);
+  }, score, elt("div", {class: "clear"}), elt("p", {}, commentStr));
 
     var box = elt("div", {
       class: "ann-box",
