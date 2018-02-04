@@ -69,25 +69,34 @@
 
   <% for problem in @problems do %>
     <td class="prettyBorder">
+    <% auto_score = Score.where('submission_id = ? AND problem_id = ? AND autograded = true', submission.id, problem.id)
+       ann_scores = Score.where('submission_id = ? AND problem_id = ? AND autograded = false', submission.id, problem.id)
+       ann_scores_sum = 0
+       ann_scores_released = true
+       for score in ann_scores do
+         ann_scores_sum += score.score
+         ann_scores_released &= score.released
+       end
+     %>
+     <% if !auto_score.blank? && auto_score.first.released == true then %>
+       <% if !auto_score.first.feedback.blank? then %>
+         <%= link_to (auto_score.first.score.to_f.round(1).to_s),  {action: :viewFeedback,
+           submission_id: submission.id,
+           feedback: problem.id} %>
+       <% else %>
+         <%= auto_score.first.score.to_f.round(1).to_s %>
+       <% end %>
+     <% else %>
+       --
+     <% end %>
+     <% if !ann_scores.empty? && ann_scores_released == true then %>
+       <%  if link = view_course_assessment_submission_path(@course, @assessment, submission) %>
+         <a href="<%= link %>" class="tooltipped" title="View Source" data-tooltip="View Source" data-placement="right" aria-label="Justify" style="margin-right:6px; font-size: 20px;"> + <%= ann_scores_sum %></a>
 
-      <% if @scores[submission.id] and @scores[submission.id][problem.id] and @scores[submission.id][problem.id][:released] == 1 then
-        score = @scores[submission.id][problem.id]
-        if score[:feedback] then %>
-
-          <%= link_to (score[:score].to_f.round(1).to_s), {action: :viewFeedback,
-            submission_id: submission.id,
-            feedback: problem.id} %>
-
-        <% else %>
-          <%= score[:score].to_f.round(1).to_s %>
-        <% end %>
-      <% else %>
-        <% unless problem.optional then
-          dontTotal = true
-        end %>
-        --
-      <% end %>
-    </td>
+       <% else %>
+       <%= ann_scores_sum %>
+       <% end %>
+     <% end %>
   <% end %>
 
   <% if @course.grace_days >= 0 then %>

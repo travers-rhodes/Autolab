@@ -5,7 +5,7 @@ namespace :autolab do
   USER_COUNT = 50
   ASSESSMENT_CATEGORIES = ["Homework", "Lab", "Quiz"]
   ASSESSMENT_COUNT = 6
-  PROBLEM_COUNT = 3 
+  PROBLEM_COUNT = 3
   SUBMISSION_MAX = 3
   PROBLEM_MAX_SCORE = 100.0
   COURSE_START = Time.now - 80.days
@@ -28,7 +28,7 @@ namespace :autolab do
       c.name = name
       c.semester = "SEM"
       c.late_slack = 0
-      c.grace_days = 3 
+      c.grace_days = 3
       c.late_penalty = Penalty.new(:value => 5, :kind => "points")
       c.version_penalty = Penalty.new(:value => 5, :kind => "points")
       c.display_name = name
@@ -47,12 +47,12 @@ namespace :autolab do
       ASSESSMENT_COUNT.times do |i|
         course.assessments.create do |a|
           a.category_name = cat
-          
-          a.visible_at = start 
+
+          a.visible_at = start
           a.start_at = start
           a.due_at = start + (5 + rand(11)).days          # 5-15d after start date
           a.end_at = a.due_at + (1 + rand(7)).day   # 1d-1w after the due date
-          a.grading_deadline = a.end_at + (1 + rand(7)).day   # 1-7d after submit deadline 
+          a.grading_deadline = a.end_at + (1 + rand(7)).day   # 1-7d after submit deadline
 
           a.name = "#{cat}#{i.to_s}".downcase
           a.display_name = "#{cat} #{i.to_s}"
@@ -86,7 +86,7 @@ namespace :autolab do
   end
 
   def load_users course
-    
+
     if User.where(:email => "admin@foo.bar").first then
       @grader = User.where(:email => "admin@foo.bar").first
     else
@@ -122,7 +122,7 @@ namespace :autolab do
     })
 
     i = 0
-    User.populate(USER_COUNT, :per_query => 10000) do |u| 
+    User.populate(USER_COUNT, :per_query => 10000) do |u|
       u.attributes = @default_user
 
       u.first_name = "User"
@@ -222,6 +222,12 @@ namespace :autolab do
     assessment.problems.each do |p|
       Score.populate(1, :per_query => 10000) do |score|
         score.attributes = @default_score
+        score.autograded = true
+
+        create_feedback = rand(PROBLEM_MAX_SCORE.to_i).to_f
+        if(create_feedback < 50.0) then
+          score.feedback = "Test string!!!! Foobar "
+        end
 
         score.score = rand(PROBLEM_MAX_SCORE.to_i).to_f
         score.problem_id = p.id
@@ -272,7 +278,7 @@ namespace :autolab do
     # Create assessment
     asmt = course.assessments.create! do |a|
       a.category_name = AUTOGRADE_CATEGORY_NAME
-      
+
       a.visible_at = COURSE_START
       a.start_at = COURSE_START
       a.due_at = COURSE_START + (5 + rand(11)).days
@@ -312,8 +318,8 @@ namespace :autolab do
   end
 
   task :populate, [:name] => :environment do |t, args|
-    require "populator" 
-  
+    require "populator"
+
     args.with_defaults(:name => COURSE_NAME)
     abort("Only use this task in development or test.") unless ["development", "test"].include? Rails.env
     # If course exists, in `dev` aborts; in `test` overwrites.
@@ -335,7 +341,7 @@ namespace :autolab do
     @default_score = Score.new.attributes.delete_if &unwanted
     @default_user = User.new.attributes.delete_if &unwanted
 
-    puts "Creating Course #{args.name} and config file" 
+    puts "Creating Course #{args.name} and config file"
     course = load_course args.name
 
     puts "Creating Assessments"
@@ -398,4 +404,3 @@ namespace :autolab do
     end
   end
 end
-
