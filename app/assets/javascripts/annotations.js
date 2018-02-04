@@ -202,6 +202,7 @@ var initializeAnnotationsForCode = function() {
       $(edit).hide();
       var form = newEditAnnotationForm(annObj.line, annObj);
       $(box).append(form);
+      $(box).find("textarea").trigger('autoresize');
       //var updateAnnotation = function(annotationObj, lineInd, formEl) {
 
     });
@@ -281,7 +282,9 @@ var initializeAnnotationsForCode = function() {
       $(edit).hide();
       $(score).hide();
       var form = newEditAnnotationForm(annObj.line, annObj);
-      $(box).append(form);
+      $(box).append(form, function () {
+          $(box).find("textarea").trigger('autoresize');
+      });
       //var updateAnnotation = function(annotationObj, lineInd, formEl) {
 
     });
