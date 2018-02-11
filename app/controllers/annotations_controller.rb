@@ -26,7 +26,7 @@ class AnnotationsController < ApplicationController
       score.submission_id =  params[:submission_id]
       score.score = annotation_params[:value]
       score.problem_id = annotation_params[:problem_id]
-      score.released = false
+      score.released = true
       score.grader_id = @cud.id
       score.autograded = false
       score.save
