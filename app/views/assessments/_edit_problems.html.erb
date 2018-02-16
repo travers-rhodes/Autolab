@@ -5,7 +5,8 @@
 	  <tr>
 	      <th data-field="problem_name">Problem</th>
 	      <th data-field="max_score">Max Score</th>
-	      <th data-field="optional">Optional?</th>      
+				<th data-field="base score">Base Score</th>
+	      <th data-field="optional">Optional?</th>
 	      <th data-field="options">Options</th>
 	  </tr>
 	</thead>
@@ -15,6 +16,7 @@
 			<tr>
 				<td><%= problem.name %></td>
 				<td><%= problem.max_score %></td>
+				<td><%= problem.base_score ? problem.base_score : "N/A" %></td>
 				<td><%= problem.optional ? "yes" : "no" %></td>
 				<td>
 					<%= link_to "<i class=\"material-icons left\">mode_edit</i>".html_safe, [:edit, @course, @assessment, problem], { class: "small" } %>

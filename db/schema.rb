@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180201161011) do
+ActiveRecord::Schema.define(version: 20180211185503) do
 
   create_table "annotations", force: :cascade do |t|
     t.integer  "submission_id", limit: 4
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(version: 20180201161011) do
     t.datetime "updated_at"
     t.float    "max_score",     limit: 24,    default: 0.0
     t.boolean  "optional",      limit: 1,     default: false
+    t.integer  "base_score",    limit: 4
   end
 
   create_table "scheduler", force: :cascade do |t|
