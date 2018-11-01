@@ -79,14 +79,14 @@ module TangoClient
       end
     end
 
-    def self.poll(courselab, output_file)
+    def poll(courselab, output_file)
       handle_exceptions do
         url = "/poll/#{@api_key}/#{courselab}/#{output_file}"
         self.get(url)
       end
     end
 
-    def self.info
+    def info()
       resp = handle_exceptions do
         url = "/info/#{@api_key}/"
         self.get(url)
@@ -94,7 +94,7 @@ module TangoClient
       resp["info"]
     end
 
-    def self.jobs(deadjobs = 0)
+    def jobs(deadjobs = 0)
       resp = handle_exceptions do
         url = "/jobs/#{@api_key}/#{deadjobs}/"
         self.get(url)
@@ -102,7 +102,7 @@ module TangoClient
       resp["jobs"]
     end
 
-    def self.pool(image = nil)
+    def pool(image = nil)
       resp = handle_exceptions do
         url = image.nil? ? "/pool/#{@api_key}/" : "/pool/#{@api_key}/#{image}/"
         self.get(url)
@@ -110,7 +110,7 @@ module TangoClient
       resp["pools"]
     end
 
-    def self.prealloc(image, num, options = {})
+    def prealloc(image, num, options = {})
       handle_exceptions do
         url = "/prealloc/#{@api_key}/#{image}/#{num}/"
         self.get(url, body: options)

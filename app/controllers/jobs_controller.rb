@@ -29,7 +29,7 @@ class JobsController < ApplicationController
 
     # Get the complete lists of live and dead jobs from the server
     begin
-      raw_live_jobs = TangoClient.default().jobs
+      raw_live_jobs = TangoClient.default().jobs()
       raw_dead_jobs = TangoClient.default().jobs(deadjobs = 1)
     rescue TangoClient::TangoException => e
       flash[:error] = "Error while getting job list: #{e.message}"
@@ -76,7 +76,7 @@ class JobsController < ApplicationController
 
     # Get the complete lists of live and dead jobs from the server
     begin
-      raw_live_jobs = TangoClient.default().jobs
+      raw_live_jobs = TangoClient.default().jobs()
       raw_dead_jobs = TangoClient.default().jobs(deadjobs = 1)
     rescue TangoClient::TangoException => e
       flash[:error] = "Error while getting job list: #{e.message}"
@@ -163,8 +163,8 @@ class JobsController < ApplicationController
   action_auth_level :tango_status, :instructor
   def tango_status
     # Obtain overall Tango info and pool status
-    @tango_info = TangoClient.default().info
-    @vm_pool_list = TangoClient.default().pool
+    @tango_info = TangoClient.default().info()
+    @vm_pool_list = TangoClient.default().pool()
     # Obtain Image -> Course mapping
     @img_to_course = {}
     Assessment.find_each do |asmt|
@@ -175,7 +175,7 @@ class JobsController < ApplicationController
       end
     end
     # Run through job list and extract useful data
-    @tango_live_jobs = TangoClient.default().jobs
+    @tango_live_jobs = TangoClient.default().jobs()
     @tango_dead_jobs = TangoClient.default().jobs(deadjobs = 1)
     @plot_data = tango_plot_data(live_jobs = @tango_live_jobs, dead_jobs = @tango_dead_jobs)
     # Get a list of current and upcoming assessments
@@ -256,7 +256,7 @@ protected
   end
 
   def tango_plot_data(live_jobs = nil, dead_jobs = nil)
-    live_jobs ||= TangoClient.default().jobs
+    live_jobs ||= TangoClient.default().jobs()
     dead_jobs ||= TangoClient.default().jobs(deadjobs = 1)
     @plot_data = { new_jobs: { name: "New Job Requests", dates: [], job_name: [], job_id: [],
                                vm_pool: [], vm_id: [], status: [], duration: [] },
