@@ -129,3 +129,5 @@ gem 'prawn', '0.13.0'
 gem 'net-ldap'
 
 gem 'sprockets-rails', '2.3.3'
+
+gem 'activity_notification'
