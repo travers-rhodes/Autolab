@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171228095028) do
+ActiveRecord::Schema.define(version: 20181101151526) do
 
   create_table "annotations", force: :cascade do |t|
     t.integer  "submission_id"
@@ -309,6 +309,21 @@ ActiveRecord::Schema.define(version: 20171228095028) do
 
   add_index "submissions", ["assessment_id"], name: "index_submissions_on_assessment_id"
   add_index "submissions", ["course_user_datum_id"], name: "index_submissions_on_course_user_datum_id"
+
+  create_table "tangos", force: :cascade do |t|
+    t.string   "host",                          null: false
+    t.string   "port",                          null: false
+    t.integer  "timeout",       default: 15
+    t.integer  "max_dead_jobs", default: 500
+    t.integer  "def_dead_jobs", default: 15
+    t.string   "key",                           null: false
+    t.boolean  "use_polling",   default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "autograder_id"
+  end
+
+  add_index "tangos", ["autograder_id"], name: "index_tangos_on_autograder_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false

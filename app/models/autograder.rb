@@ -4,6 +4,8 @@
 #
 class Autograder < ActiveRecord::Base
   belongs_to :assessment
+  has_one :tango
+  accepts_nested_attributes_for :tango
 
   trim_field :autograde_image
 
@@ -17,5 +19,9 @@ class Autograder < ActiveRecord::Base
   SERIALIZABLE = Set.new %w(autograde_image autograde_timeout release_score)
   def serialize
     Utilities.serializable attributes, SERIALIZABLE
+  end
+  
+  def tango
+    super || build_tango
   end
 end

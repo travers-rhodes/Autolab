@@ -13,6 +13,7 @@ class AutogradersController < ApplicationController
       a.autograde_timeout = 180
       a.autograde_image = "autograding_image"
       a.release_score = true
+      a.tango = Tango.new
     end
     if @autograder.save
         flash[:success] = "Autograder Created"
@@ -25,10 +26,12 @@ class AutogradersController < ApplicationController
 
   action_auth_level :edit, :instructor
   def edit
+    puts "parameter - " + @autograder.tango.to_s
   end
 
   action_auth_level :update, :instructor
   def update
+    puts "parameter - " + params.inspect
       if @autograder.update(autograder_params)
           flash[:success] = "Autograder saved!"
           begin
@@ -77,10 +80,11 @@ private
 
   def set_autograder
     @autograder = @assessment.autograder
+    @autograder.tango ||= Tango.new
     redirect_to([@course, @assessment]) if @autograder.nil?
   end
 
   def autograder_params
-    params[:autograder].permit(:autograde_timeout, :autograde_image, :release_score)
+    params[:autograder].permit(:autograde_timeout, :autograde_image, :release_score, tango_attributes:[:host, :port, :key])
   end
 end

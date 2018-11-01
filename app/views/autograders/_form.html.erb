@@ -54,6 +54,16 @@
 		Both of the above files will be renamed upon upload.
 	</p>
 
+	<h4>Custom Tango Configuration</h4>
+	<p class="help-block">
+		If you have your own Tango autograding instance, fill in its details here to use it for this assessment.
+	</p>
+	<%= f.fields_for :tango do |tango_form| %>
+			<%= tango_form.text_field :host, display_name: "Host", help_text: "Host IP of your custom Tango instance", placeholder:"e.g. 192.168.1.1" %>
+			<%= tango_form.text_field :port, display_name: "Port", help_text: "Host port of your custom Tango instance", placeholder:"e.g. 3000" %>
+			<%= tango_form.text_field :key, display_name: "Key", help_text: "Restful API key from Tango for authentication", placeholder:"e.g. test" %>
+	<% end %>
+
   <%= f.submit "Save Settings", { class: "" } %>
   
   <%= link_to "Delete Autograder", [@course, @assessment, :autograder], method: :delete, class: "btn danger",

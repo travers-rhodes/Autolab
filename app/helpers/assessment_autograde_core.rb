@@ -46,16 +46,22 @@ module AssessmentAutogradeCore
       end
     end
 
-    # now actually send all of the upload requests
+    # if this assessment has a custom tango client, use it
+    tangoClient = TangoClient.default()
+    if(@autograde_prop.tango && @autograde_prop.tango.host)
+      tangoClient = TangoClient.with(@autograde_prop.tango)
+    end
+
+    # now actually send all of the upload requests    
     upload_file_list.each do |f|
       md5hash = Digest::MD5.file(f["localFile"]).to_s
       next if (existing_files.has_key?(File.basename(f["localFile"])) &&
           existing_files[File.basename(f["localFile"])] == md5hash)
 
       begin
-        TangoClient.upload("#{course.name}-#{assessment.name}",
-                           File.basename(f["localFile"]),
-                           File.open(f["localFile"], "rb").read)
+        tangoClient.upload("#{course.name}-#{assessment.name}",
+                    File.basename(f["localFile"]),
+                    File.open(f["localFile"], "rb").read)
       rescue TangoClient::TangoException => e
         COURSE_LOGGER.log("Error while uploading autograding files for #{submission.id}: #{e.message}")
         raise AutogradeError.new("Error while uploading autograding files", :tango_upload, e.message)
@@ -136,8 +142,14 @@ module AssessmentAutogradeCore
                        "timeout" => @autograde_prop.autograde_timeout,
                        "callback_url" => callback_url,
                        "jobName" => job_name }.to_json
+                       
+    # if this assessment has a custom tango client, use it
+    tangoClient = TangoClient.default()
+    if(@autograde_prop.tango && @autograde_prop.tango.host)
+      tangoClient = TangoClient.with(@autograde_prop.tango)
+    end
     begin
-      response = TangoClient.addjob("#{course.name}-#{assessment.name}", job_properties)
+      response = tangoClient.addjob("#{course.name}-#{assessment.name}", job_properties)
     rescue TangoClient::TangoException => e
       COURSE_LOGGER.log("Error while adding job to the queue: #{e.message}")
       raise AutogradeError.new("Error while adding job to the queue", :tango_add_job, e.message)
@@ -151,10 +163,18 @@ module AssessmentAutogradeCore
   #
   def tango_poll(course, assessment, submissions, output_file)
     feedback = nil
+    
+    # if this assessment has a custom tango client, use it
+    tangoClient = TangoClient.default()
+    autograder = assessment.autograder
+    if(autograder.tango && autograder.tango.host)
+      tangoClient = TangoClient.with(autograder.tango)
+    end
+    
     begin
       Timeout.timeout(80) do
         loop do
-          response = TangoClient.poll("#{course.name}-#{assessment.name}", "#{URI.encode(output_file)}")
+          response = tangoClient.poll("#{course.name}-#{assessment.name}", "#{URI.encode(output_file)}")
           # json is returned when a job is not complete
           unless response.content_type == "application/json"
             feedback = response.body
@@ -237,9 +257,15 @@ module AssessmentAutogradeCore
     @autograde_prop = assessment.autograder
     raise AutogradeError.new("There are no autograding properties", :missing_autograding_props) unless @autograde_prop
 
+    # if this assessment has a custom Tango instance, use it
+    tangoClient = TangoClient.default()
+    if(@autograde_prop.tango && @autograde_prop.tango.host)
+      tangoClient = TangoClient.with(@autograde_prop.tango)
+    end
+    
     # send the tango open request
     begin
-      existing_files = TangoClient.open("#{course.name}-#{assessment.name}")
+      existing_files = tangoClient.open("#{course.name}-#{assessment.name}")
     rescue TangoClient::TangoException => e
       COURSE_LOGGER.log("Error with open request on Tango for submission #{submissions[0].id}: #{e.message}")
       raise AutogradeError.new("Error with open request on Tango", :tango_open, e.message)
