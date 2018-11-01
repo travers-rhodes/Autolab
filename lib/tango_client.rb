@@ -17,21 +17,12 @@ module TangoClient
     include HTTParty
     default_timeout 30
     
-    def get(path, options = {}, &block)
-      url = HTTParty.normalize_base_uri("#{@host}:#{@port}")
-      HTTParty.get(url+path, options, &block)
-    end
-    
-    def post(path, options = {}, &block)
-      url = HTTParty.normalize_base_uri("#{@host}:#{@port}")
-      HTTParty.get(url+path, options, &block)
-    end
-    
     def initialize(host, port, key, timeout)
       @host = host
       @port = port
       @timeout = timeout
       @api_key = key
+      TangoClientObj.base_uri("#{@host}:#{@port}")
     end
     
     def handle_exceptions
@@ -60,7 +51,7 @@ module TangoClient
     def open(courselab)
       resp = handle_exceptions do
         url = "/open/#{@api_key}/#{courselab}/"
-        self.get(url)
+        TangoClientObj.get(url)
       end
       resp["files"]
     end
@@ -68,28 +59,29 @@ module TangoClient
     def upload(courselab, filename, file)
       handle_exceptions do
         url = "/upload/#{@api_key}/#{courselab}/"
-        self.post(url, headers: { "filename" => filename }, body: file)
+        TangoClientObj.post(url, headers: { "filename" => filename }, body: file)
       end
     end
 
     def addjob(courselab, options = {})
       handle_exceptions do
         url = "/addJob/#{@api_key}/#{courselab}/"
-        self.post(url, body: options)
+        puts "TRAP 1 - ", options
+        TangoClientObj.post(url, body: options)
       end
     end
 
     def poll(courselab, output_file)
       handle_exceptions do
         url = "/poll/#{@api_key}/#{courselab}/#{output_file}"
-        self.get(url)
+        TangoClientObj.get(url)
       end
     end
 
     def info()
       resp = handle_exceptions do
         url = "/info/#{@api_key}/"
-        self.get(url)
+        TangoClientObj.get(url)
       end
       resp["info"]
     end
@@ -97,7 +89,7 @@ module TangoClient
     def jobs(deadjobs = 0)
       resp = handle_exceptions do
         url = "/jobs/#{@api_key}/#{deadjobs}/"
-        self.get(url)
+        TangoClientObj.get(url)
       end
       resp["jobs"]
     end
@@ -105,7 +97,7 @@ module TangoClient
     def pool(image = nil)
       resp = handle_exceptions do
         url = image.nil? ? "/pool/#{@api_key}/" : "/pool/#{@api_key}/#{image}/"
-        self.get(url)
+        TangoClientObj.get(url)
       end
       resp["pools"]
     end
@@ -113,7 +105,7 @@ module TangoClient
     def prealloc(image, num, options = {})
       handle_exceptions do
         url = "/prealloc/#{@api_key}/#{image}/#{num}/"
-        self.get(url, body: options)
+        TangoClientObj.get(url, body: options)
       end
     end
   end
