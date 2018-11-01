@@ -48,7 +48,7 @@ module AssessmentAutogradeCore
 
     # if this assessment has a custom tango client, use it
     tangoClient = TangoClient.default()
-    if(@autograde_prop.tango && @autograde_prop.tango.host)
+    if(@autograde_prop.tango && @autograde_prop.tango.host != "")
       tangoClient = TangoClient.with(@autograde_prop.tango)
     end
 
@@ -145,7 +145,7 @@ module AssessmentAutogradeCore
                        
     # if this assessment has a custom tango client, use it
     tangoClient = TangoClient.default()
-    if(@autograde_prop.tango && @autograde_prop.tango.host)
+    if(@autograde_prop.tango && @autograde_prop.tango.host != "")
       tangoClient = TangoClient.with(@autograde_prop.tango)
     end
     begin
@@ -259,7 +259,7 @@ module AssessmentAutogradeCore
 
     # if this assessment has a custom Tango instance, use it
     tangoClient = TangoClient.default()
-    if(@autograde_prop.tango && @autograde_prop.tango.host)
+    if(@autograde_prop.tango && @autograde_prop.tango.host != "")
       tangoClient = TangoClient.with(@autograde_prop.tango)
     end
     
