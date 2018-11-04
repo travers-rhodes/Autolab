@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181025205107) do
+ActiveRecord::Schema.define(version: 20181104163731) do
 
   create_table "annotations", force: :cascade do |t|
     t.integer  "submission_id", limit: 4
@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 20181025205107) do
     t.float    "value",         limit: 24
     t.integer  "problem_id",    limit: 4
     t.string   "coordinate",    limit: 255
-    t.integer  "score_id",      limit: 8
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -198,8 +197,8 @@ ActiveRecord::Schema.define(version: 20181025205107) do
     t.string   "notifier_type",   limit: 255
     t.text     "parameters",      limit: 65535
     t.datetime "opened_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   add_index "notifications", ["group_owner_id"], name: "index_notifications_on_group_owner_id", using: :btree
@@ -275,7 +274,6 @@ ActiveRecord::Schema.define(version: 20181025205107) do
     t.datetime "updated_at"
     t.float    "max_score",     limit: 24,    default: 0.0
     t.boolean  "optional",      limit: 1,     default: false
-    t.integer  "base_score",    limit: 4
   end
 
   create_table "scheduler", force: :cascade do |t|
@@ -308,10 +306,9 @@ ActiveRecord::Schema.define(version: 20181025205107) do
     t.datetime "updated_at"
     t.boolean  "released",      limit: 1,        default: false
     t.integer  "grader_id",     limit: 4
-    t.boolean  "autograded",    limit: 1,        default: false
   end
 
-  add_index "scores", ["problem_id", "submission_id"], name: "problem_submission_unique", using: :btree
+  add_index "scores", ["problem_id", "submission_id"], name: "problem_submission_unique", unique: true, using: :btree
   add_index "scores", ["submission_id"], name: "index_scores_on_submission_id", using: :btree
 
   create_table "submissions", force: :cascade do |t|
@@ -338,25 +335,6 @@ ActiveRecord::Schema.define(version: 20181025205107) do
 
   add_index "submissions", ["assessment_id"], name: "index_submissions_on_assessment_id", using: :btree
   add_index "submissions", ["course_user_datum_id"], name: "index_submissions_on_course_user_datum_id", using: :btree
-
-  create_table "subscriptions", force: :cascade do |t|
-    t.integer  "target_id",                limit: 4,                    null: false
-    t.string   "target_type",              limit: 255,                  null: false
-    t.string   "key",                      limit: 255,                  null: false
-    t.boolean  "subscribing",              limit: 1,     default: true, null: false
-    t.boolean  "subscribing_to_email",     limit: 1,     default: true, null: false
-    t.datetime "subscribed_at"
-    t.datetime "unsubscribed_at"
-    t.datetime "subscribed_to_email_at"
-    t.datetime "unsubscribed_to_email_at"
-    t.text     "optional_targets",         limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "subscriptions", ["key"], name: "index_subscriptions_on_key", using: :btree
-  add_index "subscriptions", ["target_type", "target_id", "key"], name: "index_subscriptions_on_target_type_and_target_id_and_key", unique: true, using: :btree
-  add_index "subscriptions", ["target_type", "target_id"], name: "index_subscriptions_on_target_type_and_target_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "",    null: false
