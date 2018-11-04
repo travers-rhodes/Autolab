@@ -1,4 +1,5 @@
 Autolab3::Application.routes.draw do
+  resources :notifications
   use_doorkeeper
 
   namespace :oauth, { defaults: {format: :json} } do
