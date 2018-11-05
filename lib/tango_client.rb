@@ -66,7 +66,6 @@ module TangoClient
     def addjob(courselab, options = {})
       handle_exceptions do
         url = "/addJob/#{@api_key}/#{courselab}/"
-        puts "TRAP 1 - ", options
         TangoClientObj.post(url, body: options)
       end
     end

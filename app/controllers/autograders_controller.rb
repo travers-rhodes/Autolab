@@ -13,7 +13,6 @@ class AutogradersController < ApplicationController
       a.autograde_timeout = 180
       a.autograde_image = "autograding_image"
       a.release_score = true
-      a.tango = Tango.new
     end
     if @autograder.save
         flash[:success] = "Autograder Created"
@@ -26,12 +25,21 @@ class AutogradersController < ApplicationController
 
   action_auth_level :edit, :instructor
   def edit
-    puts "parameter - " + @autograder.tango.to_s
   end
 
   action_auth_level :update, :instructor
   def update
-    puts "parameter - " + params.inspect
+    # If we're not trying to add a custom Tango deployment make sure
+    # no custom Tango object is in the database for this record
+    if(params[:autograder][:tango_attributes][:host].blank? and
+       params[:autograder][:tango_attributes][:port].blank? and
+       params[:autograder][:tango_attributes][:key].blank?)
+      if(!@autograder.tango.nil?)
+        @autograder.tango.delete
+      end
+      params[:autograder].delete :tango_attributes
+    end
+
       if @autograder.update(autograder_params)
           flash[:success] = "Autograder saved!"
           begin
@@ -80,7 +88,6 @@ private
 
   def set_autograder
     @autograder = @assessment.autograder
-    @autograder.tango ||= Tango.new
     redirect_to([@course, @assessment]) if @autograder.nil?
   end
 

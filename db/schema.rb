@@ -311,12 +311,12 @@ ActiveRecord::Schema.define(version: 20181101151526) do
   add_index "submissions", ["course_user_datum_id"], name: "index_submissions_on_course_user_datum_id"
 
   create_table "tangos", force: :cascade do |t|
-    t.string   "host",                          null: false
-    t.string   "port",                          null: false
+    t.string   "host"
+    t.string   "port"
     t.integer  "timeout",       default: 15
     t.integer  "max_dead_jobs", default: 500
     t.integer  "def_dead_jobs", default: 15
-    t.string   "key",                           null: false
+    t.string   "key"
     t.boolean  "use_polling",   default: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false

@@ -64,6 +64,16 @@ class Assessment < ActiveRecord::Base
     end
   end
 
+  # Used to get the tango instance we should use for this assessment
+  # If this assessment has a valid custom Tango instance, we'll return that
+  # Otherwise we'll just return the default Tango instance for this deployment
+  def tango_client
+    if (autograder.tango.nil? || autograder.tango.host.blank? )
+      return TangoClient.default()
+    end
+    return TangoClient.with(autograder.tango)
+  end
+    
   # Used by populator (in autolab.rake) to update AUD.latest_submission
   #
   # Can be used manually if AUD.latest_submission goes out of sync (emergency!)

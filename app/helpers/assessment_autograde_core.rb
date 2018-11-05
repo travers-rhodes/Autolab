@@ -46,12 +46,8 @@ module AssessmentAutogradeCore
       end
     end
 
-    # if this assessment has a custom tango client, use it
-    tangoClient = TangoClient.default()
-    if(@autograde_prop.tango && @autograde_prop.tango.host != "")
-      tangoClient = TangoClient.with(@autograde_prop.tango)
-    end
-
+    tangoClient = assessment.tango_client
+    
     # now actually send all of the upload requests    
     upload_file_list.each do |f|
       md5hash = Digest::MD5.file(f["localFile"]).to_s
@@ -142,12 +138,8 @@ module AssessmentAutogradeCore
                        "timeout" => @autograde_prop.autograde_timeout,
                        "callback_url" => callback_url,
                        "jobName" => job_name }.to_json
-                       
-    # if this assessment has a custom tango client, use it
-    tangoClient = TangoClient.default()
-    if(@autograde_prop.tango && @autograde_prop.tango.host != "")
-      tangoClient = TangoClient.with(@autograde_prop.tango)
-    end
+    tangoClient = assessment.tango_client
+    
     begin
       response = tangoClient.addjob("#{course.name}-#{assessment.name}", job_properties)
     rescue TangoClient::TangoException => e
@@ -163,13 +155,7 @@ module AssessmentAutogradeCore
   #
   def tango_poll(course, assessment, submissions, output_file)
     feedback = nil
-    
-    # if this assessment has a custom tango client, use it
-    tangoClient = TangoClient.default()
-    autograder = assessment.autograder
-    if(autograder.tango && autograder.tango.host)
-      tangoClient = TangoClient.with(autograder.tango)
-    end
+    tangoClient = assessment.tango_client
     
     begin
       Timeout.timeout(80) do
@@ -257,12 +243,7 @@ module AssessmentAutogradeCore
     @autograde_prop = assessment.autograder
     raise AutogradeError.new("There are no autograding properties", :missing_autograding_props) unless @autograde_prop
 
-    # if this assessment has a custom Tango instance, use it
-    tangoClient = TangoClient.default()
-    if(@autograde_prop.tango && @autograde_prop.tango.host != "")
-      tangoClient = TangoClient.with(@autograde_prop.tango)
-    end
-    
+    tangoClient = assessment.tango_client    
     # send the tango open request
     begin
       existing_files = tangoClient.open("#{course.name}-#{assessment.name}")
