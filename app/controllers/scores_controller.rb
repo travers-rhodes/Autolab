@@ -28,6 +28,7 @@ class ScoresController < ApplicationController
 
   action_auth_level :update, :course_assistant
   def update
+    @score.notify :users, key: "Floop"
     respond_to do |format|
       if @score && @score.update_attributes(update_params)
         format.js { render json: @score.to_json(include: :grader) }

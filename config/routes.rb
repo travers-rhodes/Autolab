@@ -2,6 +2,8 @@ Autolab3::Application.routes.draw do
   resources :notifications
   use_doorkeeper
 
+  notify_to :users
+
   namespace :oauth, { defaults: {format: :json} } do
     get 'device_flow_init', to: 'device_flow#init'
     get 'device_flow_authorize', to: 'device_flow#authorize'
@@ -21,7 +23,7 @@ Autolab3::Application.routes.draw do
           get 'writeup'
           get 'handout'
           post 'submit'
-          
+
           resources :submissions, param: :version, only: [:index] do
             get 'feedback'
           end

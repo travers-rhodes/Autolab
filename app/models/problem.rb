@@ -13,6 +13,13 @@ class Problem < ActiveRecord::Base
   validates :name, presence: true
   validates_associated :assessment
 
+  acts_as_notifiable :users,
+    # Notification targets as :targets is a necessary option
+    # Set to notify to author and users commented to the article, except comment owner self
+    targets: ->(problem, key) {
+      problem.assessment.course.course_user_data.collect {|cud| cud.user}
+    }
+
   after_save -> { assessment.dump_yaml }
 
   SERIALIZABLE = Set.new %w(name description max_score optional)

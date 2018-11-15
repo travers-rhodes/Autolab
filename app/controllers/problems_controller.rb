@@ -19,6 +19,8 @@ class ProblemsController < ApplicationController
   def create
     @problem = @assessment.problems.new(problem_params)
 
+    @problem.notify :users, key: "Created Problem #{problem_params[:name]}"
+
     if @problem.save
       redirect_to(problems_index) && return
     else

@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   trim_field :school
   validates :first_name, :last_name, :email, presence: true
 
+  acts_as_target
+
   # check if user is instructor in any course
   def instructor?
     cuds = course_user_data

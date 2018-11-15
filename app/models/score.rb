@@ -8,6 +8,13 @@ class Score < ActiveRecord::Base
 
   scope :on_latest_submissions, -> { where(submissions: { ignored: false }).joins(submission: :assessment_user_datum) }
 
+  acts_as_notifiable :users,
+    # Notification targets as :targets is a necessary option
+    # Set to notify to author and users commented to the article, except comment owner self
+    targets: ->(score, key) {
+      [score.submission.course_user_datum.user]
+    }
+
   def self.for_course(course_id)
     where(assessments: { course_id: course_id }).joins(submission: :assessment)
   end
