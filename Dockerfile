@@ -1,54 +1,26 @@
-# Dockerfile from
-#
-#     https://intercityup.com/blog/how-i-build-a-docker-image-for-my-rails-app.html
-#
-# See more documentation at the passenger-docker GitHub repo:
-#
-#     https://github.com/phusion/passenger-docker
-#
-#
-FROM phusion/passenger-ruby22:0.9.15
+FROM alpine:3.9
+MAINTAINER fzeng@andrew.cmu.edu
 
-MAINTAINER Autolab Development Team "autolab-dev@andrew.cmu.edu"
+RUN apk update && apk --update add ruby ruby-irb ruby-json ruby-rake \
+    ruby-bigdecimal ruby-io-console libstdc++ tzdata postgresql-client nodejs
 
-# Set correct environment variables.
-ENV HOME /root
-
-# Use baseimage-docker's init system.
-CMD ["/sbin/my_init"]
-
-# Start Nginx / Passenger
-RUN rm -f /etc/service/nginx/down
-# Remove the default site
-RUN rm /etc/nginx/sites-enabled/default
-# Add the nginx info
-ADD docker/nginx.conf /etc/nginx/sites-enabled/webapp.conf
-
-# Prepare folders
-RUN mkdir /home/app/webapp
-
-# Run Bundle in a cache efficient way
-WORKDIR /tmp
-ADD Gemfile /tmp/
-ADD Gemfile.lock /tmp/
-RUN bundle install
-
-# Add the rails app
-ADD . /home/app/webapp
+ADD Gemfile /app/
+ADD Gemfile.lock /app/
 
 # Move the database configuration into place
-ADD config/database.docker.yml /home/app/webapp/config/database.yml
+ADD config/database.docker.yml /app/webapp/config/database.yml
 
-# Create the log files
-RUN mkdir -p /home/app/webapp/log && \
-  touch /home/app/webapp/log/production.log && \
-  chown -R app:app /home/app/webapp/log && \
-  chmod 0664 /home/app/webapp/log/production.log
+RUN apk --update add --virtual build-dependencies build-base ruby-dev openssl-dev \
+    postgresql-dev libc-dev linux-headers && \
+    gem install bundler && \
+    cd /app ; bundle install --without development test && \
+    apk del build-dependencies
 
-# precompile the Rails assets
-WORKDIR /home/app/webapp
-RUN RAILS_ENV=production bundle exec rake assets:precompile
+ADD . /app
+RUN chown -R nobody:nogroup /app
+USER nobody
 
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ENV RAILS_ENV production
+WORKDIR /app
 
+CMD ["bundle", "exec", "unicorn", "-p", "8080", "-c", "./config/unicorn.rb"]
