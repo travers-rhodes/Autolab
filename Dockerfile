@@ -12,7 +12,7 @@ ADD config/database.docker.yml /app/webapp/config/database.yml
 
 RUN apk --update add --virtual build-dependencies build-base ruby-dev openssl-dev \
     postgresql-dev libc-dev linux-headers && \
-    gem install bundler && \
+    gem install --no-rdoc --no-ri bundler -v 1.15.4 && \
     cd /app ; bundle install --without development test && \
     apk del build-dependencies
 
