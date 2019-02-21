@@ -1,7 +1,7 @@
 FROM alpine:3.9
 MAINTAINER fzeng@andrew.cmu.edu
 
-RUN apk update && apk --update add ruby ruby-irb ruby-json ruby-rake \
+RUN apk update && apk --update add ruby=2.2 ruby-irb ruby-json ruby-rake \
     ruby-bigdecimal ruby-io-console libstdc++ tzdata postgresql-client nodejs
 
 ADD Gemfile /app/
