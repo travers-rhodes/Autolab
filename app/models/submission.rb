@@ -39,6 +39,7 @@ class Submission < ActiveRecord::Base
 
   after_create :update_latest_submission
   after_destroy :update_latest_submission
+  after_destroy :invalidate_cgdubs_for_assessments_after
 
   # allow stuff to get updated by mass assign
   # attr_accessible :notes, :tweak_attributes
@@ -70,6 +71,7 @@ class Submission < ActiveRecord::Base
   # update_latest_submission which will atomically compute the latest submission
   # and cache it in the AUD (assessment_user_data).
   delegate :update_latest_submission, to: :aud
+  delegate :invalidate_cgdubs_for_assessments_after, to: :aud
 
   def save_file(upload)
     filename = course_user_datum.user.email + "_" +
