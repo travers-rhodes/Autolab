@@ -45,9 +45,6 @@ gem 'exception_notification', ">= 4.1.0"
 gem 'rake', '>=10.3.2'
 gem 'populator', '>=1.0.0'
 
-# To communicate with MySQL database
-gem 'mysql2', '~>0.4.10'
-
 # Development server
 gem 'thin'
 
@@ -87,15 +84,6 @@ gem 'newrelic_rpm'
 gem 'browser-timezone-rails'
 gem 'js_cookie_rails'
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 # Dates and times
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.0.0'
@@ -119,7 +107,11 @@ group :development do
 
   # sqlite3 adapter
   gem 'sqlite3', '~> 1.3.6'
+end
 
+group :production do
+  # To communicate with MySQL database
+  gem 'mysql2', '~>0.4.10'
 end
 
 # for PDF annotations
