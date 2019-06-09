@@ -1,2 +1,89 @@
 .git
+.gitignore
 
+#
+# OS X
+#
+.DS_Store
+.AppleDouble
+.LSOverride
+# Icon must end with two \r
+Icon
+# Thumbnails
+._*
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+#
+# Rails
+#
+.env
+.env.sample
+*.rbc
+capybara-*.html
+log
+tmp
+db/*.sqlite3
+db/*.sqlite3-journal
+public/system
+coverage/
+spec/tmp
+**.orig
+
+.bundle
+
+.ruby-version
+.ruby-gemset
+
+.rvmrc
+
+# if using bower-rails ignore default bower_components path bower.json files
+vendor/assets/bower_components
+*.bowerrc
+bower.json
+
+# Ignore pow environment settings
+.powenv
+
+# Copied from .gitignore
+log/
+tmp/cache/
+config/autogradeConfig.rb
+assessmentConfig/
+courseConfig/
+config/environments/production.rb
+config/initializers/devise.rb
+coverage/
+/courses/
+/courses
+/gradebooks/
+config/database.yml
+config/school.yml
+public/images/CourseSubmissions.png
+public/images/HourlySubmissions.png
+public/assets/
+public/stylesheets/
+vendor/
+tmp/
+!tmp/restart.txt
+*.swp
+db/*.sqlite3
+tags
+.DS_Store
+.idea/
+.yardoc
+/docker/nginx.conf
+app/views/home/_topannounce.html.erb
+attachments/
+doc/
+out.txt
+.vscode/
+.byebug_history
+.env
