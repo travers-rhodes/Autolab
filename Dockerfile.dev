@@ -6,10 +6,9 @@ LABEL maintainer="zengfanpu@gmail.com"
 RUN apk add --no-cache --update build-base \
                                 linux-headers \
                                 git \
-                                postgresql-dev \
                                 nodejs \
                                 tzdata \
-                                mysql-client
+                                sqlite-dev
 
 ENV APP_PATH /usr/src/app
 
@@ -18,7 +17,7 @@ WORKDIR $APP_PATH
 ADD Gemfile $APP_PATH
 ADD Gemfile.lock $APP_PATH
 
-RUN bundle install
+RUN bundle install --without production
 
 # Copy application to container
 COPY . APP_PATH
