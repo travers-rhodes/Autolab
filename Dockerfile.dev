@@ -23,6 +23,7 @@ RUN bundle install --without production
 COPY . $APP_PATH
 COPY ./config/school.yml.template $APP_PATH/config/school.yml
 COPY ./config/database.docker-dev.yml $APP_PATH/config/database.yml
+COPY ./config/initializers/devise.docker-dev.rb $APP_PATH/config/initializers/devise.rb
 EXPOSE 3000
 
-CMD ["rails", "serve"]
+CMD ["rails", "server"]
