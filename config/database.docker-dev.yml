@@ -1,0 +1,13 @@
+# SQLite Configuration
+development:
+  adapter: sqlite3
+  database: db/db.sqlite3
+  pool: 5
+  timeout: 5000
+
+# SQLite Configuration
+test:
+  adapter: sqlite3
+  database: db/db_test.sqlite3
+  pool: 5
+  timeout: 5000
