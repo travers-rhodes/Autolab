@@ -1,6 +1,6 @@
 FROM ruby:2.6-alpine3.9
 
-MAINTAINER Autolab Development Team "autolab-dev@andrew.cmu.edu"
+LABEL maintainer="autolab-dev@andrew.cmu.edu"
 
 # Minimal requirements to run a Rails app
 RUN apk add --no-cache --update build-base \
