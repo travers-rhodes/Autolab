@@ -26,4 +26,7 @@ COPY ./config/database.docker-dev.yml $APP_PATH/config/database.yml
 COPY ./config/initializers/devise.docker-dev.rb $APP_PATH/config/initializers/devise.rb
 EXPOSE 3000
 
-CMD ["rails", "server"]
+RUN ["rails", "db:migrate"]
+
+# -b flag binds IP to 0.0.0.0 instead of localhost so it is accessible from outside
+CMD ["rails", "server", "-b", "0.0.0.0"]
