@@ -6,11 +6,11 @@ LABEL maintainer="zengfanpu@gmail.com"
 RUN apk add --no-cache --update build-base \
                                 linux-headers \
                                 git \
-                                nodejs \
                                 tzdata \
-                                sqlite-dev
+                                sqlite-dev \
+                                nodejs
 
-ENV APP_PATH /usr/src/app
+ENV APP_PATH /home/app/autolab
 
 # Different layer for installation of gems
 WORKDIR $APP_PATH
@@ -20,7 +20,9 @@ ADD Gemfile.lock $APP_PATH
 RUN bundle install --without production
 
 # Copy application to container
-COPY . APP_PATH
+COPY . $APP_PATH
+COPY ./config/school.yml.template $APP_PATH/config/school.yml
+COPY ./config/database.docker-dev.yml $APP_PATH/config/database.yml
 EXPOSE 3000
 
 CMD ["rails", "serve"]
