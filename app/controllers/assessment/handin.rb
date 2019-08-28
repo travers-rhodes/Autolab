@@ -364,4 +364,60 @@ private
 
     @submission = Submission.new
   end
+
+  ##
+  # sendJob_AddHTMLMessages - A wrapper for AssessmentAutogradeCore::sendJob that adds error
+  #   or congratulatory messages to flash depending on the result of sendJob. Note that this
+  #   function does not "handle" the AutogradeError, it just adds messages depending on the
+  #   situation, so the caller of this function will still receive the original error from 
+  #   sendJob.
+  # 
+  # Called by assessments#handin, submissions#regrade and submissions#regradeAll
+  #
+  # On success, returns the job id
+  # On failure, enters error message into flash[:error] and raises the original AutogradeError.
+  #
+  def sendJob_AddHTMLMessages(course, assessment, submissions)
+    # Check for nil first, since students should know about this
+    flash[:error] = "Submission could not be autograded due to an error in creation" && return if submissions.blank?
+
+    begin
+      job = sendJob(course, assessment, submissions, @cud)
+    rescue AssessmentAutogradeCore::AutogradeError => e
+      case e.error_code
+      when :missing_autograding_props
+        flash[:error] = "Autograding failed because there are no autograding properties."
+        if @cud.instructor?
+          link = (view_context.link_to "Autograder Settings", [:edit, course, assessment, :autograder])
+          flash[:error] += " Visit #{link} to set the autograding properties."
+        else
+          flash[:error] += " Please contact your instructor."
+        end
+      when :tango_open
+        link = "<a href=\"#{url_for(controller: 'jobs')}\">Jobs</a>"
+        flash[:error] = "There was an error submitting your autograding job. We are likely down for maintenance if issues persist, please contact #{Rails.configuration.school['support_email']}"
+      when :tango_upload
+        flash[:error] = "There was an error uploading the submission file."
+      when :tango_add_job
+        flash[:error] = "Submission was rejected by autograder."
+        if @cud.instructor?
+          link = (view_context.link_to "Autograder Settings", [:edit, course, assessment, :autograder])
+          flash[:error] += " (Verify the autograding properties at #{link}.)\nErrorMsg: " + e.additional_data
+        end
+      when :missing_autograder_file
+        flash[:error] = "One or more files in the Autograder module don't exist. Contact the instructor."
+      else
+        flash[:error] = "Autograding failed because of an unexpected exception in the system."
+      end
+
+      raise e # pass it on
+    end
+
+    link = "<a href=\"#{url_for(controller: 'jobs', action: 'getjob', id: job)}\">Job ID = #{job}</a>"
+    flash[:success] = ("Submitted file #{submissions[0].filename} (#{link}) for autograding." \
+      " Refresh the page to see the results.").html_safe
+
+    job
+  end
+
 end
