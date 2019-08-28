@@ -19,6 +19,9 @@ module AssessmentHandin
   # is if you want to prevent other functionlity. You should be very careful about this.
   #
   # Any errors should be added to flash[:error] and return false or nil.
+  #
+  #
+  # Extra lines to check line numbers
   def handin
 
     if @assessment.embedded_quiz
