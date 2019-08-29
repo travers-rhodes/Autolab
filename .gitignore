@@ -1,6 +1,6 @@
 log/
 tmp/cache/
-config/autogradeConfig.rb
+#config/autogradeConfig.rb
 assessmentConfig/
 courseConfig/
 config/environments/production.rb
